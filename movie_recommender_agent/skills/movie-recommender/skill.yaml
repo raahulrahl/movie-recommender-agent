@@ -6,21 +6,15 @@ author: paras25619@gmail.com
 # Description
 description: |
   Intelligent movie recommendation system that provides personalized film suggestions
-  based on user preferences, viewing history, genres, moods, and ratings. Uses Exa
-  search to access real-time movie data, ratings, reviews, and streaming availability.
+  based on user preferences, genres, and ratings. Uses search to access real-time
+  movie data and provides structured recommendations.
 
 # Tags and Modes
 tags:
-  - movie
-  - recommender
+  - movie-recommendation
   - entertainment
-  - films
-  - cinema
-  - exa
-  - ratings
-  - genres
-  - streaming
-  - personalized
+  - film-suggestions
+  - movie-curation
 
 input_modes:
   - text/plain
@@ -29,129 +23,152 @@ input_modes:
 output_modes:
   - text/plain
   - application/json
-  - text/markdown
 
 # Example Queries
 examples:
-  - "Suggest thriller movies similar to Inception and Shutter Island"
-  - "What are the top-rated comedy movies from the last 2 years?"
-  - "Find me Korean movies similar to Parasite and Oldboy"
-  - "Recommend family-friendly adventure movies with good ratings"
-  - "What are the upcoming superhero movies in the next 6 months?"
-  - "Suggest psychological thrillers similar to Black Swan and Gone Girl"
-  - "What are the best animated movies from Studio Ghibli?"
-  - "Recommend mind-bending sci-fi movies like Inception and Interstellar"
-  - "What are good family movies for kids aged 8-12?"
-  - "Suggest comedy movies perfect for a group movie night"
+  - "What are the top-rated sci-fi movies from the last decade?"
+  - "Suggest movies similar to Inception and Interstellar"
+  - "Recommend family-friendly adventure films with high ratings"
+
+# Detailed Capabilities
+capabilities_detail:
+  primary_capability:
+    supported: true
+    description: "Provides personalized movie recommendations using Exa search and analysis"
+    features:
+      - "Real-time movie data access via Exa"
+      - "Rating and review analysis"
+      - "Genre-based and preference matching"
+      - "Structured markdown output"
+    limitations: "Focused on movie recommendations only, depends on Exa API availability"
+
+  secondary_capability:
+    supported: false
+    planned_version: "2.0.0"
+    description: "Advanced features like collaborative filtering or trend analysis"
 
 # Requirements
 requirements:
   packages:
-    - agno>=2.2.0
-    - openai>=2.11.0
-    - exa-py>=2.0.0
-    - python-dotenv>=1.0.1
-  system: []
-  min_memory_mb: 512
-  external_services:
-    - OpenAI API or OpenRouter API (for LLM capabilities)
-    - Exa API (required for movie information)
-    - Mem0 API (optional, for memory operations)
-    - PostgreSQL (optional, for vector database)
+    - "agno"
+    - "exa-py"
+    - "pydantic"
+    - "bindu"
+  system:
+    - "Python 3.12+"
+  min_memory_mb: 256
 
 # Performance Metrics
 performance:
-  avg_processing_time_ms: 8000
-  max_concurrent_requests: 3
-  memory_per_request_mb: 512
+  avg_processing_time_ms: 10000
+  max_concurrent_requests: 5
+  memory_per_request_mb: 256
   scalability: horizontal
 
 # Tool Restrictions
 allowed_tools:
-  - ExaTools
-  - Mem0Tools
-  - Think
-  - Analyze
-  - Reason
-  - Extract
-  - ReasoningTools
+  - Read
+  - Write
+  - Execute
 
 # Rich Documentation
 documentation:
   overview: |
-    This skill specializes in intelligent movie recommendations using real-time
-    movie data from Exa search. It analyzes user preferences, favorite films, genres,
-    and viewing contexts to deliver personalized movie suggestions with comprehensive
-    information.
+    Intelligent movie recommendation agent that analyzes user preferences and provides personalized suggestions.
+    Uses Exa search for current movie data, ratings, and reviews. Built on Agno framework with structured output.
 
   use_cases:
     when_to_use:
-      - Finding movies to watch based on specific preferences
-      - Discovering films similar to favorites
-      - Exploring new genres or international cinema
-      - Planning movie nights for different audiences
-      - Keeping up with upcoming releases
-      - Finding highly-rated films in specific categories
-      - Getting mood-based movie suggestions
+      - "Entertainment recommendation platforms"
+      - "Personal movie discovery and curation"
+      - "Genre exploration and mood-based suggestions"
+      - "Planning movie nights or viewing sessions"
 
     when_not_to_use:
-      - Illegal movie streaming or piracy requests
-      - Creating movie scripts or content
-      - Professional film criticism or analysis
-      - Movie production or distribution advice
-      - Real-time movie showtimes or theater information
-      - Movie ticket purchasing
+      - "Real-time chat or conversational interfaces"
+      - "Non-movie content analysis"
+      - "Illegal movie streaming or piracy requests"
+      - "Movie production or distribution advice"
 
   input_structure: |
-    Accepts movie recommendation queries with preferences:
+    JSON-RPC 2.0 message with user query in parts array.
 
+    Example:
     {
-      "query": "Movie recommendation request",
-      "min_rating": 7.5,
-      "genres": ["thriller", "sci-fi"],
-      "max_results": 8,
-      "include_upcoming": true
+      "jsonrpc": "2.0",
+      "method": "message/send",
+      "params": {
+        "message": {
+          "role": "user",
+          "parts": [
+            {
+              "kind": "text",
+              "text": "Recommend 5 movies for someone who enjoys sci-fi thrillers like Inception and Interstellar"
+            }
+          ],
+          "kind": "message",
+          "messageId": "11111111-2222-4333-8444-555555555551",
+          "contextId": "11111111-2222-4333-8444-555555555552",
+          "taskId": "11111111-2222-4333-8444-555555555553"
+        },
+        "configuration": {
+          "acceptedOutputModes": ["application/json"]
+        }
+      },
+      "id": "11111111-2222-4333-8444-555555555554"
     }
 
-    Constraints:
-    - Max query length: 500 characters
-    - Timeout: 120 seconds
-    - Language: English primary
-    - Scope: Movie recommendations and information
-
   output_format: |
-    Standard Movie Recommendation Output:
+    JSON-RPC 2.0 result with task history and artifacts containing markdown summary.
+
+    Success Response:
     {
-      "success": true,
-      "movie_recommendations": [
-        {
-          "title": "Movie Title",
-          "year": 2023,
-          "rating": {"imdb": 8.2, "rotten_tomatoes": 92},
-          "genres": ["Thriller", "Sci-Fi"],
-          "runtime_minutes": 148,
-          "director": "Director Name",
-          "cast": ["Actor 1", "Actor 2"],
-          "content_rating": "PG-13",
-          "plot_summary": "Brief spoiler-free summary...",
-          "reason_for_recommendation": "Matches your preference for...",
-          "streaming_available": true
-        }
-      ],
-      "bonus_recommendations": ["Title 1", "Title 2"],
-      "upcoming_releases": [
-        {
-          "title": "Upcoming Movie",
-          "release_date": "2024-12-15",
-          "description": "Anticipated film about..."
-        }
-      ],
-      "metadata": {
-        "query": "original_query",
-        "recommendation_count": 7,
-        "processing_time_ms": 8500,
-        "data_sources": ["Exa search"],
-        "response_type": "movie_recommendations"
+      "jsonrpc": "2.0",
+      "id": "11111111-2222-4333-8444-555555555554",
+      "result": {
+        "id": "11111111-2222-4333-8444-555555555553",
+        "context_id": "11111111-2222-4333-8444-555555555552",
+        "kind": "task",
+        "status": {
+          "state": "completed",
+          "timestamp": "2026-02-25T18:51:18.907649+00:00"
+        },
+        "history": [
+          {
+            "message_id": "11111111-2222-4333-8444-555555555551",
+            "context_id": "11111111-2222-4333-8444-555555555552",
+            "task_id": "11111111-2222-4333-8444-555555555553",
+            "kind": "message",
+            "parts": [
+              {
+                "kind": "text",
+                "text": "Recommend 5 movies for someone who enjoys sci-fi thrillers like Inception and Interstellar"
+              }
+            ],
+            "role": "user"
+          },
+          {
+            "kind": "message",
+            "role": "assistant",
+            "parts": [
+              {
+                "kind": "text",
+                "text": "# 🎬 Movie Recommendations..."
+              }
+            ]
+          }
+        ],
+        "artifacts": [
+          {
+            "name": "result",
+            "parts": [
+              {
+                "kind": "text",
+                "text": "Markdown formatted summary with recommendations"
+              }
+            ]
+          }
+        ]
       }
     }
 
@@ -163,139 +180,96 @@ documentation:
     - "Content restrictions: Politely decline and suggest appropriate alternatives"
 
   examples:
-    - title: "Thriller Recommendations"
+    - title: "Sci-Fi Thriller Recommendations"
       input:
-        query: "Suggest thriller movies similar to Inception with IMDB 8+ rating"
-        min_rating: 8.0
+        parts:
+          - kind: "text"
+            text: "Recommend 5 movies for someone who enjoys sci-fi thrillers like Inception and Interstellar"
       output:
-        success: true
-        movie_recommendations:
-          - title: "Inception"
-            year: 2010
-            rating: {"imdb": 8.8}
-            genres: ["Thriller", "Sci-Fi"]
-            runtime_minutes: 148
-            director: "Christopher Nolan"
-            reason_for_recommendation: "Mind-bending thriller with similar complexity"
-        metadata:
-          recommendation_count: 5
-          processing_time_ms: 9200
-          data_sources: ["Exa search"]
+        text: |
+          # 🎬 Movie Recommendations for Sci-Fi Thriller Fans
 
-    - title: "Family Movie Night"
-      input:
-        query: "Family-friendly adventure movies for kids 8-12"
-      output:
-        success: true
-        movie_recommendations:
-          - title: "The Mitchells vs. The Machines"
-            year: 2021
-            rating: {"imdb": 7.6}
-            genres: ["Adventure", "Comedy", "Animation"]
-            runtime_minutes: 114
-            director: "Michael Rianda"
-            reason_for_recommendation: "Perfect modern family adventure with humor"
-        metadata:
-          recommendation_count: 6
-          processing_time_ms: 7800
-          data_sources: ["Exa search"]
+          ## 🎯 Based on your preferences for: Sci-fi thrillers like *Inception* and *Interstellar*
+
+          ### 🏆 Top Recommendations
+
+          | Movie | Year | Rating | Genre | Runtime | Why You Might Like It |
+          |-------|------|--------|-------|---------|----------------------|
+          | **Arrival** | 2016 | ⭐ 8.0/10 IMDB | 👽 Sci-Fi, 🤯 Thriller | 1h 56m | A mind-bending narrative exploring communication with aliens... |
+          | **Source Code** | 2011 | ⭐ 7.5/10 IMDB | 🤖 Sci-Fi, 🔍 Mystery | 1h 33m | A gripping thriller involving time loops... |
+          | **The Prestige** | 2006 | ⭐ 8.5/10 IMDB | 🎩 Sci-Fi, 🧙‍♂️ Mystery | 2h 10m | Directed by Christopher Nolan, weaving a tale of illusion... |
+          | **Coherence** | 2013 | ⭐ 7.2/10 IMDB | ⬛ Sci-Fi, 🌌 Mystery | 1h 29m | A low-budget gem that plays with alternate dimensions... |
+          | **Looper** | 2012 | ⭐ 7.4/10 IMDB | 🔫 Sci-Fi, 🌀 Thriller | 1h 53m | Engaging time-travel thriller with complex plot lines... |
 
   best_practices:
     for_developers:
-      - "Always verify movie information through Exa search"
-      - "Implement rate limiting for Exa API calls"
-      - "Cache frequent queries to improve performance"
-      - "Provide clear explanations for recommendations"
-      - "Include diversity in recommendations when appropriate"
-      - "Monitor for inappropriate content requests"
+      - "Use async/await for all agent operations"
+      - "Implement graceful degradation for partial failures"
+      - "Cache API responses to reduce latency"
+      - "Test with various query types and edge cases"
 
     for_orchestrators:
-      - "Route movie recommendation queries to this agent"
-      - "Consider caching popular movie queries"
-      - "Monitor Exa API usage and implement rate limiting"
-      - "Chain with entertainment research agents for deeper analysis"
-      - "Use for personalized entertainment recommendations"
+      - "Route movie recommendation queries to this skill"
+      - "Chain with content summarization or sentiment analysis skills"
+      - "Expect 10-30 second processing time per request"
+      - "Implement retry logic with exponential backoff"
+      - "Monitor agent response times and API rate limits"
 
   installation: |
-    Required packages:
-    pip install agno openai exa-py python-dotenv
+    Install via uv package manager.
 
-    Optional packages:
-    pip install mem0ai  # For memory features
-    pip install sqlalchemy psycopg[binary] pgvector  # For PostgreSQL vector database
+    Required packages:
+    uv sync
 
     Environment variables:
-    OPENAI_API_KEY=your_openai_api_key          # OR
-    OPENROUTER_API_KEY=your_openrouter_api_key  # Alternative to OpenAI
-    EXA_API_KEY=your_exa_api_key                # Required for movie information
-    MEM0_API_KEY=your_mem0_api_key              # Optional for conversation memory
-    DATABASE_URL=postgresql://...              # Optional for vector database
+    OPENROUTER_API_KEY=<your-key>
+    MEM0_API_KEY=<your-key>
+    EXA_API_KEY=<your-key>
+
+    Run:
+    uv run python -m movie_recommender_agent
 
   versioning:
     - version: "1.0.0"
       date: "2026-01-11"
-      changes: "Initial release with Exa movie search, personalized recommendations, and optional memory/database support"
+      changes: "Initial release with movie recommendation using Exa search"
+    - version: "2.0.0"
+      status: "planned"
+      changes: "Add advanced features like collaborative filtering or trend analysis"
 
 # Assessment fields for skill negotiation
 assessment:
   keywords:
-    - movie
-    - film
-    - cinema
-    - recommend
-    - recommendation
-    - watch
-    - viewing
-    - thriller
-    - comedy
-    - drama
-    - horror
-    - sci-fi
-    - action
-    - romance
-    - animated
-    - documentary
-    - rating
-    - imdb
-    - genre
-    - director
-    - actor
-    - cast
-    - streaming
+    - "movie"
+    - "film"
+    - "recommend"
+    - "recommendation"
+    - "genre"
+    - "rating"
 
   specializations:
-    - domain: entertainment_recommendation
-      confidence_boost: 0.3
-    - domain: movie_information
-      confidence_boost: 0.3
-    - domain: genre_expertise
-      confidence_boost: 0.2
-    - domain: personalized_suggestions
-      confidence_boost: 0.2
+    - domain: "movie-recommendation"
+      confidence_boost: 0.9
+    - domain: "content-curation"
+      confidence_boost: 0.1
 
   anti_patterns:
     - "download movie free"
     - "pirate movie"
-    - "watch movie without paying"
     - "illegal streaming"
     - "movie script writing"
-    - "film production budget"
-    - "movie distribution rights"
-    - "theater showtimes"
+    - "film production"
 
   complexity_indicators:
     simple:
-      - "movies like single title"
+      - "recommend movies like single title"
       - "top rated genre movies"
       - "recent genre releases"
-      - "family movies"
     medium:
       - "movies similar to multiple titles"
       - "genre movies with specific criteria"
       - "international movies in language"
-      - "movies for specific mood/occasion"
     complex:
       - "movies combining multiple genres/themes"
       - "director/actor filmography analysis"
       - "cinematic movement recommendations"
-      - "films exploring complex theme"

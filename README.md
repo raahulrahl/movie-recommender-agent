@@ -17,10 +17,44 @@
   <a href="https://img.shields.io/github/license/Paraschamoli/movie-recommender-agent">
     <img src="https://img.shields.io/github/license/Paraschamoli/movie-recommender-agent" alt="License">
   </a>
-  <a href="https://img.shields.io/badge/python-3.12-blue">
-    <img src="https://img.shields.io/badge/python-3.12-blue" alt="Python 3.12">
+  <a href="https://img.shields.io/github/v/release/Paraschamoli/movie-recommender-agent">
+    <img src="https://img.shields.io/github/v/release/Paraschamoli/movie-recommender-agent" alt="Version">
+  </a>
+  <a href="https://img.shields.io/github/stars/Paraschamoli/movie-recommender-agent">
+    <img src="https://img.shields.io/github/stars/Paraschamoli/movie-recommender-agent" alt="Stars">
+  </a>
+  <a href="https://img.shields.io/github/issues/Paraschamoli/movie-recommender-agent">
+    <img src="https://img.shields.io/github/issues/Paraschamoli/movie-recommender-agent" alt="Issues">
+  </a>
+  <a href="https://img.shields.io/badge/python-3.12+-blue">
+    <img src="https://img.shields.io/badge/python-3.12+-blue" alt="Python 3.12+">
   </a>
 </p>
+
+---
+
+## 📋 Table of Contents
+
+- [🎯 What is Movie Recommender Agent?](#-what-is-movie-recommender-agent)
+  - [Key Features](#key-features)
+  - [Built-in Tools](#built-in-tools)
+  - [Recommendation Process](#recommendation-process)
+- [🚀 Quick Start](#-quick-start)
+  - [1. Clone and Setup](#1-clone-and-setup)
+  - [2. Configure Environment](#2-configure-environment)
+  - [3. Run Locally](#3-run-locally)
+  - [4. Test with Docker](#4-test-with-docker)
+- [🔧 Configuration](#-configuration)
+- [💡 Usage Examples](#-usage-examples)
+- [🐳 Docker Deployment](#-docker-deployment)
+- [📁 Project Structure](#-project-structure)
+- [🔌 API Reference](#-api-reference)
+- [🧪 Testing](#-testing)
+- [🚨 Troubleshooting](#-troubleshooting)
+- [📊 Dependencies](#-dependencies)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🙏 Credits & Acknowledgments](#-credits--acknowledgments)
 
 ---
 
@@ -49,6 +83,34 @@ An AI-powered assistant that provides personalized movie recommendations based o
 3.  **Personalized Matching** - Match films to your preferences.
 4.  **Comprehensive Info** - Provide ratings, cast, plot, and streaming details.
 5.  **Contextual Suggestions** - Consider mood, viewing context, and group dynamics.
+
+## 🏗️ Architecture
+
+The Movie Recommender Agent is built using a modern AI agent framework with the following components:
+
+### Core Framework
+- **Agno**: AI agent framework providing structured reasoning and tool integration
+- **Bindu**: Agent deployment platform for hosting and orchestration
+- **Python 3.12+**: Modern Python with async support
+
+### AI & LLM Integration
+- **OpenRouter/OpenAI**: Large language models for intelligent analysis and recommendation generation
+- **Structured Outputs**: JSON-RPC based communication for reliable API interactions
+
+### Data & Tools
+- **Exa Search**: Real-time movie information, ratings, and reviews
+- **Mem0**: Optional conversation memory for personalized interactions
+- **Skill System**: Modular skill configuration via YAML for extensibility
+
+### API Design
+- **JSON-RPC 2.0**: Standardized API protocol for agent communication
+- **Task-based Processing**: Asynchronous task handling with status tracking
+- **Artifact System**: Structured output delivery with markdown formatting
+
+### Deployment Options
+- **Local Development**: Python virtual environments with uv
+- **Docker**: Containerized deployment for production
+- **Cloud Ready**: Scalable architecture for cloud platforms
 
 ---
 
@@ -131,7 +193,32 @@ Default port: `3773` (can be changed in `agent_config.json`)
 
 ---
 
-## 💡 Usage Examples
+## � Skill Configuration
+
+The Movie Recommender Agent uses a skill-based architecture for modularity and extensibility. The skill configuration is defined in `movie_recommender_agent/skills/movie-recommender/skill.yaml`.
+
+### Skill Features
+- **ID**: movie-recommender-v1
+- **Capabilities**: Personalized movie recommendations using Exa search
+- **Input Modes**: text/plain, application/json
+- **Output Modes**: text/plain, application/json
+- **Performance**: Average 10s processing time, 5 concurrent requests
+- **Tools**: ExaTools, Mem0Tools (optional), Read/Write/Execute
+
+### Capabilities Detail
+- **Primary**: Provides personalized movie recommendations with real-time data
+- **Secondary**: Advanced features like collaborative filtering (planned v2.0.0)
+
+### Assessment Fields
+- **Keywords**: movie, film, recommend, genre, rating
+- **Specializations**: movie-recommendation (0.9), content-curation (0.1)
+- **Complexity Indicators**: Simple queries (1-2 criteria), medium (multiple criteria), complex (deep analysis)
+
+For detailed skill configuration, see [`skill.yaml`](movie_recommender_agent/skills/movie-recommender/skill.yaml).
+
+---
+
+## � Usage Examples
 
 ### Via HTTP API
 
@@ -146,6 +233,58 @@ curl -X POST http://localhost:3773/chat \
       }
     ]
   }'
+```
+
+### Via JSON-RPC API
+
+The agent supports JSON-RPC 2.0 protocol for structured interactions with task management.
+
+#### Send a Message
+
+```bash
+curl --location 'http://localhost:3773' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer sk-or-v1-...' \
+--data '{
+  "jsonrpc": "2.0",
+  "method": "message/send",
+  "params": {
+    "message": {
+      "role": "user",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Recommend 5 movies for someone who enjoys sci-fi thrillers like Inception and Interstellar. Include a brief description, IMDb rating, release year, and why each movie fits the preference."
+        }
+      ],
+      "kind": "message",
+      "messageId": "11111111-2222-4333-8444-555555555551",
+      "contextId": "11111111-2222-4333-8444-555555555552",
+      "taskId": "11111111-2222-4333-8444-555555555553"
+    },
+    "skillId": "movie-recommender-v1",
+    "configuration": {
+      "acceptedOutputModes": ["application/json"]
+    }
+  },
+  "id": "11111111-2222-4333-8444-555555555554"
+}'
+```
+
+#### Get Task Status
+
+```bash
+curl --location 'http://localhost:3773' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer sk-or-v1-...' \
+--data '{
+  "jsonrpc": "2.0",
+  "method": "tasks/get",
+  "params": {
+    "taskId": "11111111-2222-4333-8444-555555555553"
+  },
+  "id": "11111111-2222-4333-8444-555555555555"
+}'
 ```
 
 ### Sample Movie Recommendation Queries
@@ -317,7 +456,7 @@ GET http://localhost:3773/health
 {"status": "healthy", "agent": "Movie Recommender Agent"}
 ```
 
-### Chat Endpoint
+### Chat Endpoint (HTTP)
 
 ```bash
 POST http://localhost:3773/chat
@@ -327,6 +466,88 @@ Content-Type: application/json
   "messages": [
     {"role": "user", "content": "Your movie recommendation query here"}
   ]
+}
+```
+
+### JSON-RPC API
+
+The agent implements JSON-RPC 2.0 protocol for structured task management.
+
+#### message/send
+
+Send a message to create a new task.
+
+**Request:**
+```bash
+curl --location 'http://localhost:3773' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer sk-or-v1-...' \
+--data '{
+  "jsonrpc": "2.0",
+  "method": "message/send",
+  "params": {
+    "message": {
+      "role": "user",
+      "parts": [{"kind": "text", "text": "Recommend movies similar to Inception"}],
+      "kind": "message",
+      "messageId": "uuid",
+      "contextId": "uuid",
+      "taskId": "uuid"
+    },
+    "skillId": "movie-recommender-v1",
+    "configuration": {"acceptedOutputModes": ["application/json"]}
+  },
+  "id": "request-id"
+}'
+```
+
+**Response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "request-id",
+  "result": {
+    "id": "task-id",
+    "context_id": "context-id",
+    "kind": "task",
+    "status": {"state": "submitted", "timestamp": "2026-02-25T18:51:01.778474+00:00"},
+    "history": [...]
+  }
+}
+```
+
+#### tasks/get
+
+Get the status and results of a task.
+
+**Request:**
+```bash
+curl --location 'http://localhost:3773' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer sk-or-v1-...' \
+--data '{
+  "jsonrpc": "2.0",
+  "method": "tasks/get",
+  "params": {"taskId": "task-id"},
+  "id": "request-id"
+}'
+```
+
+**Response:**
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "request-id",
+  "result": {
+    "id": "task-id",
+    "status": {"state": "completed", "timestamp": "2026-02-25T18:51:18.907649+00:00"},
+    "artifacts": [
+      {
+        "name": "result",
+        "parts": [{"kind": "text", "text": "# Movie Recommendations..."}]
+      }
+    ]
+  }
 }
 ```
 
@@ -409,10 +630,103 @@ We welcome contributions! Please follow these steps:
 *   Use type hints where possible.
 *   Add docstrings for public functions.
 *   Keep functions focused and small.
+*   Use meaningful variable names.
+
+**Testing:**
+*   Add unit tests for new features.
+*   Update existing tests if needed.
+*   Ensure all tests pass before submitting.
+*   Test both local and Docker deployments.
+
+**Documentation:**
+*   Update README for new features.
+*   Add inline comments for complex logic.
+*   Update API documentation if endpoints change.
+
+**Commit Messages:**
+*   Use conventional commits: `feat:`, `fix:`, `docs:`, `test:`, `refactor:`
+*   Keep first line under 50 characters.
+*   Provide detailed description if needed.
+
+**Pull Request Process:**
+*   Ensure CI/CD passes.
+*   Request review from maintainers.
+*   Address review comments promptly.
+*   Squash commits if requested.
 
 ---
 
-## 📄 License
+## 🔗 Resources
+
+### Official Documentation
+*   **Bindu Platform**: [bindus.directory](https://bindus.directory)
+*   **Bindu Docs**: [docs.getbindu.com](https://docs.getbindu.com)
+*   **Agno Framework**: [docs.agno.com](https://docs.agno.com)
+
+### APIs & Services
+*   **Exa Search**: [exa.ai](https://exa.ai)
+*   **OpenRouter**: [openrouter.ai](https://openrouter.ai)
+*   **Mem0 Memory**: [mem0.ai](https://mem0.ai)
+
+### Related Projects
+*   **Awesome Agents**: [github.com/getbindu/awesome-agent-servers](https://github.com/getbindu/awesome-agent-servers)
+*   **Agent Templates**: [github.com/getbindu/create-bindu-agent](https://github.com/getbindu/create-bindu-agent)
+
+### Community
+*   **GitHub Discussions**: [github.com/ParasChamoli/movie-recommender-agent/discussions](https://github.com/ParasChamoli/movie-recommender-agent/discussions)
+*   **Discord**: Bindu Community Server
+*   **Twitter**: [@getbindu](https://twitter.com/getbindu)
+
+### Movie APIs & Data
+*   **TMDB API**: [themoviedb.org](https://www.themoviedb.org/)
+*   **OMDB API**: [omdbapi.com](https://www.omdbapi.com/)
+*   **IMDb Data**: [imdb.com](https://www.imdb.com/)
+
+---
+
+## � Changelog
+
+### v1.0.0 (2026-01-11)
+- Initial release with Exa movie search integration
+- Personalized movie recommendations with ratings and reviews
+- JSON-RPC API support with task management
+- Optional Mem0 memory system for conversations
+- Docker deployment support
+- Skill-based architecture for extensibility
+
+### v2.0.0 (Planned)
+- Advanced recommendation algorithms (collaborative filtering)
+- Trend analysis and popularity tracking
+- Enhanced user preference learning
+- Multi-language movie recommendations
+- Integration with streaming service APIs
+
+---
+
+## 🚀 Roadmap
+
+### Short Term (Q2 2026)
+- [ ] User feedback collection system
+- [ ] Enhanced movie metadata (trailers, posters)
+- [ ] Batch recommendation processing
+- [ ] Improved error handling and retry logic
+
+### Medium Term (Q3-Q4 2026)
+- [ ] Collaborative filtering based on user communities
+- [ ] Real-time movie trend analysis
+- [ ] Personalized watchlist management
+- [ ] Social features (share recommendations)
+
+### Long Term (2027+)
+- [ ] Multi-modal recommendations (images, videos)
+- [ ] Voice interaction support
+- [ ] Integration with major streaming platforms
+- [ ] Advanced AI models for deeper movie analysis
+- [ ] Global movie database with user contributions
+
+---
+
+## �� License
 MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
