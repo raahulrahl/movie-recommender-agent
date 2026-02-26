@@ -1,20 +1,20 @@
 id: movie-recommender-v1
 name: movie-recommender
 version: 1.0.0
-author: paras25619@gmail.com
+author: paras@getbindu.com
 
 # Description
 description: |
-  Intelligent movie recommendation system that provides personalized film suggestions
-  based on user preferences, genres, and ratings. Uses search to access real-time
-  movie data and provides structured recommendations.
+  AI-powered movie recommendation agent that provides personalized film suggestions
+  using Exa search for real-time movie data, ratings, and reviews. Delivers structured
+  markdown recommendations with detailed movie information.
 
 # Tags and Modes
 tags:
   - movie-recommendation
   - entertainment
-  - film-suggestions
-  - movie-curation
+  - film-curation
+  - personalized-suggestions
 
 input_modes:
   - text/plain
@@ -23,37 +23,44 @@ input_modes:
 output_modes:
   - text/plain
   - application/json
+  - text/markdown
 
 # Example Queries
 examples:
-  - "What are the top-rated sci-fi movies from the last decade?"
-  - "Suggest movies similar to Inception and Interstellar"
-  - "Recommend family-friendly adventure films with high ratings"
+  - "Suggest Recent Movies movies similar to Inception"
+  - "Recommend family-friendly adventure films with high ratings for a family outing. Include the movie title, release year, and a brief plot summary."
+  - "Top-rated comedy movies from last 2 years"
+  - "Korean movies similar to Parasite and Oldboy"
 
 # Detailed Capabilities
 capabilities_detail:
   primary_capability:
     supported: true
-    description: "Provides personalized movie recommendations using Exa search and analysis"
+    description: "Personalized movie recommendations using Exa search and OpenRouter LLM"
     features:
-      - "Real-time movie data access via Exa"
-      - "Rating and review analysis"
-      - "Genre-based and preference matching"
-      - "Structured markdown output"
-    limitations: "Focused on movie recommendations only, depends on Exa API availability"
+      - "Real-time movie information via ExaTools API"
+      - "IMDB and Rotten Tomatoes rating lookup"
+      - "Genre-based and similarity matching"
+      - "Structured markdown output with tables and emojis"
+      - "Movie metadata: title, year, rating, genre, runtime, director, cast, synopsis"
+      - "Streaming platform availability (when available)"
+      - "Upcoming releases and bonus recommendations"
+    limitations: "Requires Exa API and OpenRouter API; no direct streaming links; depends on external data availability"
 
   secondary_capability:
-    supported: false
-    planned_version: "2.0.0"
-    description: "Advanced features like collaborative filtering or trend analysis"
+    supported: true
+    description: "Optional conversation memory using Mem0Tools"
+    features:
+      - "Conversation context retention across sessions"
+      - "User preference learning"
+    limitations: "Requires MEM0_API_KEY environment variable; optional feature"
 
 # Requirements
 requirements:
   packages:
     - "agno"
-    - "exa-py"
-    - "pydantic"
     - "bindu"
+    - "python-dotenv"
   system:
     - "Python 3.12+"
   min_memory_mb: 256
@@ -67,28 +74,30 @@ performance:
 
 # Tool Restrictions
 allowed_tools:
-  - Read
-  - Write
-  - Execute
+  - ExaTools
+  - Mem0Tools
 
 # Rich Documentation
 documentation:
   overview: |
-    Intelligent movie recommendation agent that analyzes user preferences and provides personalized suggestions.
-    Uses Exa search for current movie data, ratings, and reviews. Built on Agno framework with structured output.
+    PopcornPal is an AI-powered movie recommendation agent built with Agno framework.
+    Uses ExaTools for real-time movie data access and OpenRouter (default: openai/gpt-4o) for LLM.
+    Optional Mem0Tools integration for conversation memory. Returns structured markdown with tables,
+    emojis, and detailed movie metadata including ratings, cast, synopsis, and viewing tips.
 
   use_cases:
     when_to_use:
-      - "Entertainment recommendation platforms"
-      - "Personal movie discovery and curation"
-      - "Genre exploration and mood-based suggestions"
-      - "Planning movie nights or viewing sessions"
+      - "Movie discovery based on preferences or similar titles"
+      - "Genre-specific recommendations with rating filters"
+      - "Mood-based or occasion-based suggestions (date night, family outing)"
+      - "International cinema exploration"
+      - "Upcoming releases and trending movies"
 
     when_not_to_use:
-      - "Real-time chat or conversational interfaces"
-      - "Non-movie content analysis"
-      - "Illegal movie streaming or piracy requests"
-      - "Movie production or distribution advice"
+      - "Streaming links or illegal content access"
+      - "Movie production or filmmaking advice"
+      - "TV shows or series recommendations (movie-focused only)"
+      - "Real-time ticket booking or theater information"
 
   input_structure: |
     JSON-RPC 2.0 message with user query in parts array.
@@ -103,139 +112,176 @@ documentation:
           "parts": [
             {
               "kind": "text",
-              "text": "Recommend 5 movies for someone who enjoys sci-fi thrillers like Inception and Interstellar"
+              "text": "Suggest Recent Movies movies similar to Inception"
             }
           ],
           "kind": "message",
-          "messageId": "11111111-2222-4333-8444-555555555551",
-          "contextId": "11111111-2222-4333-8444-555555555552",
-          "taskId": "11111111-2222-4333-8444-555555555553"
+          "messageId": "550e8400-e29b-41d4-a716-446655440038",
+          "contextId": "550e8400-e29b-41d4-a716-446655440038",
+          "taskId": "550e8400-e29b-41d4-a716-446655440078"
         },
         "configuration": {
           "acceptedOutputModes": ["application/json"]
         }
       },
-      "id": "11111111-2222-4333-8444-555555555554"
+      "id": "550e8400-e29b-41d4-a716-446655440024"
     }
 
   output_format: |
-    JSON-RPC 2.0 result with task history and artifacts containing markdown summary.
+    JSON-RPC 2.0 result with task status, history, and artifacts containing markdown recommendations.
 
-    Success Response:
+    Task Submission Response:
     {
       "jsonrpc": "2.0",
-      "id": "11111111-2222-4333-8444-555555555554",
+      "id": "550e8400-e29b-41d4-a716-446655440024",
       "result": {
-        "id": "11111111-2222-4333-8444-555555555553",
-        "context_id": "11111111-2222-4333-8444-555555555552",
+        "id": "550e8400-e29b-41d4-a716-446655440078",
+        "context_id": "550e8400-e29b-41d4-a716-446655440038",
         "kind": "task",
         "status": {
+          "state": "submitted",
+          "timestamp": "2026-02-26T05:57:54.684589+00:00"
+        },
+        "history": [...]
+      }
+    }
+
+    Task Completion Response (via tasks/get):
+    {
+      "jsonrpc": "2.0",
+      "id": "550e8400-e29b-41d4-a716-446655440014",
+      "result": {
+        "id": "550e8400-e29b-41d4-a716-446655440078",
+        "status": {
           "state": "completed",
-          "timestamp": "2026-02-25T18:51:18.907649+00:00"
+          "timestamp": "2026-02-26T05:58:07.302860+00:00"
         },
         "history": [
           {
-            "message_id": "11111111-2222-4333-8444-555555555551",
-            "context_id": "11111111-2222-4333-8444-555555555552",
-            "task_id": "11111111-2222-4333-8444-555555555553",
-            "kind": "message",
-            "parts": [
-              {
-                "kind": "text",
-                "text": "Recommend 5 movies for someone who enjoys sci-fi thrillers like Inception and Interstellar"
-              }
-            ],
-            "role": "user"
+            "role": "user",
+            "parts": [{"kind": "text", "text": "Suggest Recent Movies movies similar to Inception"}]
           },
           {
-            "kind": "message",
             "role": "assistant",
-            "parts": [
-              {
-                "kind": "text",
-                "text": "# 🎬 Movie Recommendations..."
-              }
-            ]
+            "parts": [{"kind": "text", "text": "# 🎬 Movie Recommendations...\n\n## 🎯 Based on your preferences..."}]
           }
         ],
         "artifacts": [
           {
+            "artifact_id": "8bfe0735-1408-4f08-926a-0fe1519a5085",
             "name": "result",
-            "parts": [
-              {
-                "kind": "text",
-                "text": "Markdown formatted summary with recommendations"
-              }
-            ]
+            "parts": [{"kind": "text", "text": "Structured markdown with tables, ratings, and metadata"}]
           }
         ]
       }
     }
 
   error_handling:
-    - "No matches found: Suggest broader criteria or popular alternatives"
-    - "Limited information: Acknowledge limitations and provide best available options"
-    - "Vague queries: Ask for clarification or provide genre samplers"
-    - "Exa API limitations: Prioritize key information and suggest follow-up research"
-    - "Content restrictions: Politely decline and suggest appropriate alternatives"
+    - "Missing OPENROUTER_API_KEY: Raises APIKeyError with setup instructions"
+    - "Missing EXA_API_KEY: Raises APIKeyError with Exa.ai signup link"
+    - "Exa API unavailable: Agent acknowledges issue and provides recommendations from existing knowledge"
+    - "No matches found: Suggests broader criteria or popular alternatives"
+    - "Vague queries: Provides genre samplers or asks for clarification"
 
   examples:
-    - title: "Sci-Fi Thriller Recommendations"
+    - title: "Similar Movie Recommendations"
       input:
         parts:
           - kind: "text"
-            text: "Recommend 5 movies for someone who enjoys sci-fi thrillers like Inception and Interstellar"
+            text: "Suggest Recent Movies movies similar to Inception"
       output:
         text: |
-          # 🎬 Movie Recommendations for Sci-Fi Thriller Fans
+          # 🎬 Movie Recommendations for Movies Similar to "Inception"
 
-          ## 🎯 Based on your preferences for: Sci-fi thrillers like *Inception* and *Interstellar*
+          ## 🎯 Based on your preferences for: Mind-bending, Sci-fi Thrillers
 
           ### 🏆 Top Recommendations
 
           | Movie | Year | Rating | Genre | Runtime | Why You Might Like It |
           |-------|------|--------|-------|---------|----------------------|
-          | **Arrival** | 2016 | ⭐ 8.0/10 IMDB | 👽 Sci-Fi, 🤯 Thriller | 1h 56m | A mind-bending narrative exploring communication with aliens... |
-          | **Source Code** | 2011 | ⭐ 7.5/10 IMDB | 🤖 Sci-Fi, 🔍 Mystery | 1h 33m | A gripping thriller involving time loops... |
-          | **The Prestige** | 2006 | ⭐ 8.5/10 IMDB | 🎩 Sci-Fi, 🧙‍♂️ Mystery | 2h 10m | Directed by Christopher Nolan, weaving a tale of illusion... |
-          | **Coherence** | 2013 | ⭐ 7.2/10 IMDB | ⬛ Sci-Fi, 🌌 Mystery | 1h 29m | A low-budget gem that plays with alternate dimensions... |
-          | **Looper** | 2012 | ⭐ 7.4/10 IMDB | 🔫 Sci-Fi, 🌀 Thriller | 1h 53m | Engaging time-travel thriller with complex plot lines... |
+          | **Tenet** | 2020 | ⭐ 7.3/10 IMDB | 🎬 Sci-Fi, 🔄 Action | 2h 30m | Directed by Christopher Nolan, explores time inversion... |
+          | **Palm Springs** | 2020 | 🍅 94% RT | ♻️ Sci-Fi, 🤣 Comedy | 1h 30m | Fresh take on time-loop concept... |
+
+          ## 🎞️ Detailed Recommendations
+
+          ### 1. **Tenet** (2020)
+          **⭐ Rating**: 7.3/10 IMDB
+          **� Genre**: Sci-Fi, Action
+          **⏱️ Runtime**: 2h 30m
+          **🎞️ Director**: Christopher Nolan
+          **🌟 Starring**: John David Washington, Robert Pattinson
+          **🎟️ Rating**: PG-13
+          **🌐 Language**: English, USA
+
+          **📖 Synopsis**: A secret agent embarks on a time-twisting mission...
+
+          **💡 Why this matches your request**: Shares Nolan's signature complex narrative...
+
+          ---
+          *Recommendations curated by PopcornPal 🎥*
+          *Last updated: 2026-02-26*
+
+    - title: "Family-Friendly Recommendations"
+      input:
+        parts:
+          - kind: "text"
+            text: "Recommend family-friendly adventure films with high ratings for a family outing"
+      output:
+        text: |
+          # 🎬 Movie Recommendations for Family-Friendly Adventure Films
+
+          ### 🏆 Top Recommendations
+
+          | Movie | Year | Rating | Genre | Runtime | Why You Might Like It |
+          |-------|------|--------|-------|---------|-----------------------|
+          | **Spider-Man: Into the Spider-Verse** | 2018 | ⭐ 8.4/10 IMDB | �️ Adventure, 📽️ Animation | 1h 57m | Visually stunning and action-packed... |
+          | **Paddington 2** | 2017 | 🍅 99% RT | 🧸 Adventure, 🤣 Comedy | 1h 44m | Heartfelt story with laughs... |
+
+          ## 💡 Tips for Your Movie Night
+          - Consider themed dinner inspired by the film
+          - Pair with cozy blankets for family experience
 
   best_practices:
     for_developers:
-      - "Use async/await for all agent operations"
-      - "Implement graceful degradation for partial failures"
-      - "Cache API responses to reduce latency"
-      - "Test with various query types and edge cases"
+      - "Use async/await pattern: await initialize_agent() and await handler(messages)"
+      - "Set required environment variables: OPENROUTER_API_KEY, EXA_API_KEY"
+      - "Optional: Set MEM0_API_KEY for conversation memory"
+      - "Configure MODEL_NAME (default: openai/gpt-4o)"
+      - "Agent uses lazy initialization with _init_lock for thread safety"
 
     for_orchestrators:
-      - "Route movie recommendation queries to this skill"
-      - "Chain with content summarization or sentiment analysis skills"
+      - "Route movie/film recommendation queries to this skill"
+      - "Submit tasks via message/send JSON-RPC method"
+      - "Poll task status via tasks/get method"
       - "Expect 10-30 second processing time per request"
-      - "Implement retry logic with exponential backoff"
-      - "Monitor agent response times and API rate limits"
+      - "Monitor for APIKeyError on missing credentials"
+      - "Task states: submitted → completed (or failed)"
 
   installation: |
-    Install via uv package manager.
+    1. Install dependencies:
+       uv sync
 
-    Required packages:
-    uv sync
+    2. Set environment variables (.env file or export):
+       OPENROUTER_API_KEY=<your-key>  # Required - get from https://openrouter.ai/keys
+       EXA_API_KEY=<your-key>          # Required - get from https://exa.ai
+       MEM0_API_KEY=<your-key>         # Optional - for conversation memory
+       MODEL_NAME=openai/gpt-4o        # Optional - default is openai/gpt-4o
 
-    Environment variables:
-    OPENROUTER_API_KEY=<your-key>
-    MEM0_API_KEY=<your-key>
-    EXA_API_KEY=<your-key>
+    3. Run agent server:
+       uv run python -m movie_recommender_agent
+       # Or with CLI args:
+       uv run python -m movie_recommender_agent --openrouter-api-key <key> --exa-api-key <key>
 
-    Run:
-    uv run python -m movie_recommender_agent
+    4. Server starts at http://127.0.0.1:3773 by default
+       Configuration in agent_config.json
 
   versioning:
     - version: "1.0.0"
       date: "2026-01-11"
-      changes: "Initial release with movie recommendation using Exa search"
+      changes: "Initial release with ExaTools search, OpenRouter LLM, optional Mem0 memory, structured markdown output"
     - version: "2.0.0"
       status: "planned"
-      changes: "Add advanced features like collaborative filtering or trend analysis"
+      changes: "Not supported by code - no advanced features implemented yet"
 
 # Assessment fields for skill negotiation
 assessment:

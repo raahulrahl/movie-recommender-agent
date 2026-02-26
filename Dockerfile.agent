@@ -31,7 +31,7 @@ FROM raahulrahl/bindu-runtime-base:latest
 # OCI labels
 LABEL org.opencontainers.image.title="movie-recommender-agent"
 LABEL org.opencontainers.image.description="An AI-powered assistant that suggests personalized movies based on user preferences, viewing history, genres, moods, and ratings, helping users quickly discover films they’re likely to enjoy."
-LABEL org.opencontainers.image.authors="Paras Chamoli <paras25619@gmail.com>"
+LABEL org.opencontainers.image.authors="Paras Chamoli <paras@getbindu.com>"
 LABEL org.opencontainers.image.version="1.0.0"
 LABEL org.opencontainers.image.source="https://github.com/Paraschamoli/movie-recommender-agent"
 LABEL org.opencontainers.image.licenses="MIT"
