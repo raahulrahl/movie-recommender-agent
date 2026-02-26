@@ -30,11 +30,6 @@
       "required": true
     },
     {
-      "key": "MODEL_NAME",
-      "description": "Model ID for OpenRouter (default: openai/gpt-4o)",
-      "required": false
-    },
-    {
       "key": "EXA_API_KEY",
       "description": "Exa API key for movie search and information (required)",
       "required": true
