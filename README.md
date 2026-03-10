@@ -4,8 +4,6 @@ AI-powered movie recommendation system using Exa search for real-time movie data
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue)](https://www.python.org/downloads/)
 
-[Postman Collection](https://raahul-1409c5b4-717533.postman.co/workspace/getbindu's-Workspace~44eb7cfe-a752-4114-8a1a-631395f07bf1/collection/50606358-c78625d5-046e-4ca0-a37c-3ebeef9a0756?action=share&creator=50606358)
-
 ---
 
 ## 🚀 Quick Start
